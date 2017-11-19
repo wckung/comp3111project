@@ -89,6 +89,7 @@ public class KitchenSinkController {
 	private int mark3 = 0;
 	private int mark4 = 0;
 	private int mark5 = 0;
+	private int mark6 = 0;
 	public ReminderEngine re1;
 	public ReminderEngine re2;
 	public ReminderEngine re3;
@@ -102,7 +103,7 @@ public class KitchenSinkController {
 	private static int icecreamnumber = 0;
 	private CurrTime currTime = new CurrTime();
 
-	
+
 
 
 	@Autowired
@@ -223,7 +224,7 @@ public class KitchenSinkController {
 	}
 
 	private void handleTextContent(String replyToken, Event event, TextMessageContent content)
-            throws Exception {
+			throws Exception {
 		USERID = event.getSource().getUserId();
 		String text = content.getText();
 		String parttext = "";
@@ -239,99 +240,104 @@ public class KitchenSinkController {
 		log.info("Got text message from {}: {}", replyToken, text);
 		if (mark1 == 0 && mark2 == 0 && mark3 == 0 && mark4 == 0 && mark5 == 0 && !parttext.toLowerCase().equals("code")) {
 			switch (text) {
-				case "profile": {
-					String userId = event.getSource().getUserId();
-					if (userId != null) {
-						lineMessagingClient
-								.getProfile(userId)
-								.whenComplete(new ProfileGetter(this, replyToken));
-					} else {
-						this.replyText(replyToken, "Bot can't use profile API without user ID");
-					}
-					break;
+			case "profile": {
+				String userId = event.getSource().getUserId();
+				if (userId != null) {
+					lineMessagingClient
+					.getProfile(userId)
+					.whenComplete(new ProfileGetter(this, replyToken));
+				} else {
+					this.replyText(replyToken, "Bot can't use profile API without user ID");
 				}
-				case "confirm": {
-					ConfirmTemplate confirmTemplate = new ConfirmTemplate(
-							"Do it?",
-							new MessageAction("Yes", "Yes!"),
-							new MessageAction("No", "No!")
-					);
-					TemplateMessage templateMessage = new TemplateMessage("Confirm alt text", confirmTemplate);
-					this.reply(replyToken, templateMessage);
-					break;
-				}
-				case "carousel": {
-					String imageUrl = createUri("/static/buttons/1040.jpg");
-					CarouselTemplate carouselTemplate = new CarouselTemplate(
-							Arrays.asList(
-									new CarouselColumn(imageUrl, "hoge", "fuga", Arrays.asList(
-											new URIAction("Go to line.me",
-													"https://line.me"),
-											new PostbackAction("Say hello1",
-													"hello ã�“ã‚“ã�«ã�¡ã�¯")
-									)),
-									new CarouselColumn(imageUrl, "hoge", "fuga", Arrays.asList(
-											new PostbackAction("è¨€ hello2",
-													"hello ã�“ã‚“ã�«ã�¡ã�¯",
-													"hello ã�“ã‚“ã�«ã�¡ã�¯"),
-											new MessageAction("Say message",
-													"Rice=ç±³")
-									))
-							));
-					TemplateMessage templateMessage = new TemplateMessage("Carousel alt text", carouselTemplate);
-					this.reply(replyToken, templateMessage);
-					break;
-				}
-				// modified the reply message according to the feature you are implementing.
-				case "1": {
-					USERID = event.getSource().getUserId();
-					this.replyText(replyToken, "Please enter your weight,height,age,sex in the format 'W:H:A:F/M");
-					mark1++;
-					break;
-				}
-				// modified the reply message according to the feature you are implementing.
-				case "2":
-				{
-					this.replyText(replyToken, "Please input your menu (Max: 20 Options) today in the format of Option 1, Price 1, ...");
-					mark2++;
-					break;
-				}
-				// modified the reply message according to the feature you are implementing.
-				case "3": {
-					mark3++;
-					this.replyText(replyToken, "Please enter the menu in JSONArray format");
-					break;
-				}
-				// modified the reply message according to the feature you are implementing.
-				case "4": {
-					this.replyText(replyToken, "Please enter the time in the format 'HH:MM:SS', first for breakfast:");
-					mark4++;
-					break;
-				}
-				case "5": {
-					this.replyText(replyToken, "Please enter the food you like and dislike.");
-					mark5++;
-					break;
-				}
-				case "friend": {
-					int code = codelist.getnumber();
-					SQLInsertion insertcode = new SQLInsertCode(code, USERID, this);
-					insertcode.Insert();
-					replyText(replyToken, "This is your invitation code" + code);
-					break;
-				}
-				case "menu": {
-					break;
-				}
-				default: {
-					if (!preinput.equals("1") && !preinput.equals("2") && !preinput.equals("3") && !preinput.equals("4")) {
-						this.replyText(
-								replyToken,
-								GREETINGMESSAGE + "\n" + COMMANDMESSAGE + "\n" + COMMAND1 + "\n" + COMMAND2 + "\n" + COMMAND3 + "\n" + COMMAND4
+				break;
+			}
+			case "confirm": {
+				ConfirmTemplate confirmTemplate = new ConfirmTemplate(
+						"Do it?",
+						new MessageAction("Yes", "Yes!"),
+						new MessageAction("No", "No!")
 						);
-						preinput = text;
-					}
+				TemplateMessage templateMessage = new TemplateMessage("Confirm alt text", confirmTemplate);
+				this.reply(replyToken, templateMessage);
+				break;
+			}
+			case "carousel": {
+				String imageUrl = createUri("/static/buttons/1040.jpg");
+				CarouselTemplate carouselTemplate = new CarouselTemplate(
+						Arrays.asList(
+								new CarouselColumn(imageUrl, "hoge", "fuga", Arrays.asList(
+										new URIAction("Go to line.me",
+												"https://line.me"),
+										new PostbackAction("Say hello1",
+												"hello ã�“ã‚“ã�«ã�¡ã�¯")
+										)),
+								new CarouselColumn(imageUrl, "hoge", "fuga", Arrays.asList(
+										new PostbackAction("è¨€ hello2",
+												"hello ã�“ã‚“ã�«ã�¡ã�¯",
+												"hello ã�“ã‚“ã�«ã�¡ã�¯"),
+										new MessageAction("Say message",
+												"Rice=ç±³")
+										))
+								));
+				TemplateMessage templateMessage = new TemplateMessage("Carousel alt text", carouselTemplate);
+				this.reply(replyToken, templateMessage);
+				break;
+			}
+			// modified the reply message according to the feature you are implementing.
+			case "1": {
+				USERID = event.getSource().getUserId();
+				this.replyText(replyToken, "Please enter your weight,height,age,sex in the format 'W:H:A:F/M");
+				mark1++;
+				break;
+			}
+			// modified the reply message according to the feature you are implementing.
+			case "2":
+			{
+				this.replyText(replyToken, "Please input your menu (Max: 20 Options) today in the format of Option 1, Price 1, ...");
+				mark2++;
+				break;
+			}
+			// modified the reply message according to the feature you are implementing.
+			case "3": {
+				mark3++;
+				this.replyText(replyToken, "Please enter the menu in JSONArray format");
+				break;
+			}
+			// modified the reply message according to the feature you are implementing.
+			case "4": {
+				this.replyText(replyToken, "Please enter the time in the format 'HH:MM:SS', first for breakfast:");
+				mark4++;
+				break;
+			}
+			case "5": {
+				this.replyText(replyToken, "Please enter the food you like and dislike.");
+				mark5++;
+				break;
+			}
+			case"6":{
+				this.replyText(replyToken, "Please enter the food you eat.");
+				mark5++;
+				break;
+			}
+			case "friend": {
+				int code = codelist.getnumber();
+				SQLInsertion insertcode = new SQLInsertCode(code, USERID, this);
+				insertcode.Insert();
+				replyText(replyToken, "This is your invitation code" + code);
+				break;
+			}
+			case "menu": {
+				break;
+			}
+			default: {
+				if (!preinput.equals("1") && !preinput.equals("2") && !preinput.equals("3") && !preinput.equals("4")) {
+					this.replyText(
+							replyToken,
+							GREETINGMESSAGE + "\n" + COMMANDMESSAGE + "\n" + COMMAND1 + "\n" + COMMAND2 + "\n" + COMMAND3 + "\n" + COMMAND4
+							);
+					preinput = text;
 				}
+			}
 			}
 		} else if (parttext.toLowerCase().equals("code")) {
 			SQLSearchUserID su = new SQLSearchUserID(USERID, "USERIDTable", this);
@@ -380,143 +386,136 @@ public class KitchenSinkController {
 			// modified the 'switch' command according to the feature you are implementing.
 			// modified the 'switch' command according to the feature you are implementing.
 			switch(mark1) {
-				case 1:{
-					String[] data =text.split(":");
-					int weight = Integer.parseInt(data[0]);
-					int height = Integer.parseInt(data[1]);
-					int age = Integer.parseInt(data[2]);
-					reminder(data[3]);
-					SQLInsertion re5 =new SQLInsertUserStatistic(USERID,weight,height,age,data[3], this);
-					replyText(replyToken, "Thanks for using feature 1");
-					break;
-				}
+			case 1:{
+				String[] data =text.split(":");
+				int weight = Integer.parseInt(data[0]);
+				int height = Integer.parseInt(data[1]);
+				int age = Integer.parseInt(data[2]);
+				reminder(data[3]);
+				SQLInsertion re5 =new SQLInsertUserStatistic(USERID,weight,height,age,data[3], this);
+				replyText(replyToken, "Thanks for using feature 1");
+				break;
+			}
 			}
 			// modified the 'switch' command according to the feature you are implementing.
 			switch(mark2) {
-				case 1: {
-					if (re1 != null && re2 != null && re3 != null ) {
-						re1.setmarker(false);
-						re2.setmarker(false);
-						re3.setmarker(false);
-					}
-					String[] input = text.split(",");
-					reminder(input[0] + input[1]);
-					option = new String[input.length/2];
-					price = new String[input.length/2];
-					for (int i = 0; i < input.length; i++) // store menu into array option & price
-					{
-						int j = i % 2;
-						if (j == 0) {
-							option[i / 2] = input[i];
-						} else {
-							price[(i - j) / 2] = input[i];
-						}
-					}
-					replyText(replyToken, "Type 'yes' to check the menu you input, type 'no' if you don't want to");
-					mark2++;
-					break;
+			case 1: {
+				if (re1 != null && re2 != null && re3 != null ) {
+					re1.setmarker(false);
+					re2.setmarker(false);
+					re3.setmarker(false);
 				}
-				case 2: {
-					if (text.toLowerCase().equals("yes")) {
-						reminder(String.valueOf(option.length));
-						for (int i = 0; i < option.length; i++) // testing if the storage is successful
-						{
-							reminder("option: " + option[i] + "   " + "price: " + price[i]);
-						}
-						mark2 = 0;
-						replyText(replyToken, "Thanks for using this feature1");
+				String[] input = text.split(",");
+				reminder(input[0] + input[1]);
+				option = new String[input.length/2];
+				price = new String[input.length/2];
+				for (int i = 0; i < input.length; i++) // store menu into array option & price
+				{
+					int j = i % 2;
+					if (j == 0) {
+						option[i / 2] = input[i];
 					} else {
-						mark2 = 0;
-						replyText(replyToken, "Thanks for using this feature");
+						price[(i - j) / 2] = input[i];
 					}
-					break;
 				}
+				mark2++;
+				break;
+			}
 			}
 			// modified the 'switch' command according to the feature you are implementing.
 			switch(mark3) {
-				case 1: {
-					mark3++;
-					if (re1 != null && re2 != null && re3 != null ) {
-						re1.setmarker(false);
-						re2.setmarker(false);
-						re3.setmarker(false);
-					}
-					JSONArray jsonArray = JSONArray.fromObject(text);
-					reminder("text");
-					if (jsonArray.size() > 0) {
-						for (int i = 0; i < jsonArray.size(); i++) {
-							JSONObject jsonObject = jsonArray.getJSONObject(i);
-							option2.add(jsonObject.get("option").toString());
-							price2.add(jsonObject.get("price").toString());
-						}
-					}
-					replyText(replyToken, "Type 'yes' to check the menu you input, type 'no' if you don't want to");
-					break;
+			case 1: {
+				mark3++;
+				if (re1 != null && re2 != null && re3 != null ) {
+					re1.setmarker(false);
+					re2.setmarker(false);
+					re3.setmarker(false);
 				}
-				case 2: {
-					mark3 = 0;
-					if (text.toLowerCase().equals("yes")) {
-						for (int i = 0; i < option2.size(); i++) // testing if the storage is successful
-						{
-							reminder("option: " + option2.get(i) + "   " + "price: " + price2.get(i));
-						}
-						replyText(replyToken, "Thanks for using this feature");
-					} else {
-						replyText(replyToken, "Thanks for using this feature");
+				JSONArray jsonArray = JSONArray.fromObject(text);
+				reminder("text");
+				if (jsonArray.size() > 0) {
+					for (int i = 0; i < jsonArray.size(); i++) {
+						JSONObject jsonObject = jsonArray.getJSONObject(i);
+						option2.add(jsonObject.get("option").toString());
+						price2.add(jsonObject.get("price").toString());
 					}
-					break;
 				}
+				break;
+			}
 			}
 			switch(mark4) {
-				case 1: {
-					mark4++;
-					String [] time = text.split(":");
-					reminder(time[0]+time[1]+time[2]);
-					int hour = Integer.parseInt(time[0]);
-					int minutes = Integer.parseInt(time[1]);
-					int seconds = Integer.parseInt(time[2]);
-					re1 = new ReminderEngine(hour, minutes, seconds,this,USERID);
-					replyText(replyToken, "Then for lunch");
-					break;
-				}
-				case 2: {
-					mark4++;
-					String [] time = text.split(":");
-					reminder(time[0]+time[1]+time[2]);
-					int hour = Integer.parseInt(time[0]);
-					int minutes = Integer.parseInt(time[1]);
-					int seconds = Integer.parseInt(time[2]);
-					replyText(replyToken, "Then for dinner");
-					re2 = new ReminderEngine(hour, minutes, seconds,this, USERID);
-					break;
-				}
-				case 3: {
-					mark4 = 0;
-					String [] time = text.split(":");
-					reminder(time[0]+time[1]+time[2]);
-					int hour = Integer.parseInt(time[0]);
-					int minutes = Integer.parseInt(time[1]);
-					int seconds = Integer.parseInt(time[2]);
-					re3 = new ReminderEngine(hour, minutes, seconds, this,USERID);
-					replyText(replyToken, "Thanks for using this feature");
-					break;
-				}
+			case 1: {
+				mark4++;
+				String [] time = text.split(":");
+				reminder(time[0]+time[1]+time[2]);
+				int hour = Integer.parseInt(time[0]);
+				int minutes = Integer.parseInt(time[1]);
+				int seconds = Integer.parseInt(time[2]);
+				re1 = new ReminderEngine(hour, minutes, seconds,this,USERID);
+				replyText(replyToken, "Then for lunch");
+				break;
+			}
+			case 2: {
+				mark4++;
+				String [] time = text.split(":");
+				reminder(time[0]+time[1]+time[2]);
+				int hour = Integer.parseInt(time[0]);
+				int minutes = Integer.parseInt(time[1]);
+				int seconds = Integer.parseInt(time[2]);
+				replyText(replyToken, "Then for dinner");
+				re2 = new ReminderEngine(hour, minutes, seconds,this, USERID);
+				break;
+			}
+			case 3: {
+				mark4 = 0;
+				String [] time = text.split(":");
+				reminder(time[0]+time[1]+time[2]);
+				int hour = Integer.parseInt(time[0]);
+				int minutes = Integer.parseInt(time[1]);
+				int seconds = Integer.parseInt(time[2]);
+				re3 = new ReminderEngine(hour, minutes, seconds, this,USERID);
+				replyText(replyToken, "Thanks for using this feature");
+				break;
+			}
 			}
 			switch (mark5) {
-				case 1: {
-					try {
-						String[] like = text.split(",");
-						String[] dislike = text.split(",");
-						if (like.length > 3 || dislike.length > 3) {
-							throw new Exception("illegal input, please try again.");
-						}
-						SQLInsertLike sil = new SQLInsertLike(USERID, like, dislike, this);
-						replyText(replyToken, "Thanks for using this feature.");
-					} catch (Exception e) {
-						reminder(e.getMessage());
+			case 1: {
+				try {
+					String[] like = text.split(",");
+					String[] dislike = text.split(",");
+					if (like.length > 3 || dislike.length > 3) {
+						throw new Exception("illegal input, please try again.");
 					}
+					SQLInsertLike sil = new SQLInsertLike(USERID, like, dislike, this);
+					replyText(replyToken, "Thanks for using this feature.");
+				} catch (Exception e) {
+					reminder(e.getMessage());
 				}
 			}
+			}
+			switch(mark6) {
+			case 1:{
+
+				String[] data = text.split(" ");
+				int fat , na , cal = 0 ;
+				for (int i = 0; i < data.length; i++) {
+					SQLSearching sq = new reader(data[i], this );
+					String  temp = sq.Search();
+					if(temp!=null) {
+						String []temp2 = text.split(" ");
+						fat = fat +Integer.parseInt(temp2[0]);
+						cal = cal +Integer.parseInt(temp2[1]);
+						na = na +Integer.parseInt(temp2[2]);
+					}
+				}
+				replyText(replyToken, "The toal consumption of " +text + "is below: fat is"+ fat + "g, calories is " + cal + "g,and sodium is "+ na +"g");
+				replyText(replyToken, "Thanks for using this feature");
+				break;
+			}
+			}
+
+
+
 		}
 	}
 
@@ -570,7 +569,7 @@ public class KitchenSinkController {
 
 
 
-	
+
 
 	//The annontation @Value is from the package lombok.Valuei
 	//Basically what it does is to generate constructor and getter for the class below
@@ -586,27 +585,27 @@ public class KitchenSinkController {
 	class ProfileGetter implements BiConsumer<UserProfileResponse, Throwable> {
 		private KitchenSinkController ksc;
 		private String replyToken;
-		
+
 		public ProfileGetter(KitchenSinkController ksc, String replyToken) {
 			this.ksc = ksc;
 			this.replyToken = replyToken;
 		}
 		@Override
-    	public void accept(UserProfileResponse profile, Throwable throwable) {
-    		if (throwable != null) {
-            	ksc.replyText(replyToken, throwable.getMessage());
-            	return;
-        	}
-        	ksc.reply(
-                	replyToken,
-                	Arrays.asList(new TextMessage(
-                		"Display name: " + profile.getDisplayName()),
-                              	new TextMessage("Status message: "
-                            		  + profile.getStatusMessage()))
-        	);
-    	}
-    }
-	
-	
+		public void accept(UserProfileResponse profile, Throwable throwable) {
+			if (throwable != null) {
+				ksc.replyText(replyToken, throwable.getMessage());
+				return;
+			}
+			ksc.reply(
+					replyToken,
+					Arrays.asList(new TextMessage(
+							"Display name: " + profile.getDisplayName()),
+							new TextMessage("Status message: "
+									+ profile.getStatusMessage()))
+					);
+		}
+	}
+
+
 
 }
